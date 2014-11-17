@@ -26,8 +26,8 @@ one per line.
   * `--archive` will attempt to determine a public download URL based on the value
     of `dev-repo:` and `version:` fields. Currently, only GitHub is supported.
 
-Automating opam releases
-------------------------
+Automating package releases
+---------------------------
 
 _opam-query_ can be used together with [_opam-publish_](https://github.com/AltGr/opam-publish)
 to automate the process of releasing OPAM packages. For example, if you have a `Makefile`
