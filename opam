@@ -16,5 +16,6 @@ depends: [
   "opam-lib"
   "cmdliner"
   "containers"
+  "uri"
 ]
 available: ocaml-version >= "4.01"

@@ -23,6 +23,29 @@ one per line.
     the values of the correponding field, concatenated by <code>, </code>.
   * `--tags` prints the values of the `tags:` field, concatenated by ` `.
   * `--name-version` prints the values of `name:` and `version:`, concatenated by `.`.
+  * `--archive` will attempt to determine a public download URL based on the value
+    of `dev-repo:` and `version:` fields. Currently, only GitHub is supported.
+
+Automating opam releases
+------------------------
+
+_opam-query_ can be used together with [_opam-publish_](https://github.com/AltGr/opam-publish)
+to automate the process of releasing OPAM packages. For example, if you have a `Makefile`
+and are using GitHub, the following snippet will require nothing more than modifying
+the `version:` field and running `make release`.
+
+``` make
+VERSION = $(opam query --version)
+NAME_VERSION = $(opam query --name-version)
+
+release:
+  git tag -a v$(VERSION) -m "Version $(VERSION)."
+  git push origin v$(VERSION)
+  opam publish prepare $(NAME_VERSION) $(opam query --archive)
+  opam publish submit $(NAME_VERSION)
+
+.PHONY: release
+```
 
 License
 -------

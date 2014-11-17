@@ -3,3 +3,4 @@ B _build
 PKG cmdliner
 PKG opam-lib
 PKG containers
+PKG uri
