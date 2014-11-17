@@ -20,7 +20,7 @@ one per line.
 
   * `--name`, `--version` and `--dev-repo` print the value of the correponding field.
   * `--maintainer`, `--author`, `--homepage`, `--bug-report` and `--license` print
-    the values of the correponding field, concatenated by `, `.
+    the values of the correponding field, concatenated by <code>, </code>.
   * `--tags` prints the values of the `tags:` field, concatenated by ` `.
   * `--name-version` prints the values of `name:` and `version:`, concatenated by `.`.
 
