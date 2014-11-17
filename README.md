@@ -35,9 +35,9 @@ and are using GitHub, the following snippet will require nothing more than modif
 the `version:` field and running `make release`.
 
 ``` make
-VERSION      = $(shell opam query --version)
-NAME_VERSION = $(shell opam query --name-version)
-ARCHIVE      = $(shell opam query --archive)
+VERSION      := $$(opam query --version)
+NAME_VERSION := $$(opam query --name-version)
+ARCHIVE      := $$(opam query --archive)
 
 release:
   git tag -a v$(VERSION) -m "Version $(VERSION)."
