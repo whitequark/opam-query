@@ -12,7 +12,7 @@ let guess_archive opam =
     match Uri.host uri with
     | Some "github.com" ->
       begin match Uri.path uri |> CCString.Split.list_cpy ~by:"/" with
-      | _ :: username :: project :: _ ->
+      | [""; username; project] ->
         Printf.sprintf "https://github.com/%s/%s/archive/v%s.tar.gz"
           username project (opam_version opam)
       | _ -> failwith "Unrecognized GitHub URL format."
