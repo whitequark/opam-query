@@ -18,4 +18,4 @@ depends: [
   "containers"
   "uri"
 ]
-available: ocaml-version >= "4.01"
+available: [ ocaml-version >= "4.01" ]
