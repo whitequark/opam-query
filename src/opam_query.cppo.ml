@@ -1,7 +1,8 @@
 let main field_flags filename =
   let opam = filename |> OpamFilename.of_string |> OpamFile.OPAM.read in
   field_flags |> List.iter (fun fn ->
-    fn opam |> print_endline)
+    fn opam |> print_endline);
+  `Ok ()
 
 open Cmdliner
 
@@ -33,7 +34,7 @@ let filename =
   Arg.(value & pos 0 non_dir_file "opam" &
        info ~docv:"OPAM-FILE" ~doc:"Path to the opam file." [])
 
-let eval_in_t = Term.(pure main $ field_flags $ filename)
+let main_t = Term.(ret (pure main $ field_flags $ filename))
 
 let info =
   let doc = STRINGIFY(SYNOPSIS) in
@@ -43,4 +44,4 @@ let info =
   ] in
   Term.info "opam-query" ~doc ~man
 
-let () = match Term.eval (eval_in_t, info) with `Error _ -> exit 1 | _ -> exit 0
+let () = match Term.eval (main_t, info) with `Error _ -> exit 1 | _ -> exit 0
