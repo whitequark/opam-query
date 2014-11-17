@@ -1,0 +1,20 @@
+opam-version: "1.2"
+name: "opam-query"
+version: "1.0"
+maintainer: "Peter Zotov <whitequark@whitequark.org>"
+authors: "Peter Zotov <whitequark@whitequark.org>"
+homepage: "https://github.com/whitequark/opam-query"
+bug-reports: "https://github.com/whitequark/opam-query/issues"
+dev-repo: "git://github.com/whitequark/opam-query"
+license: "MIT"
+build: [
+  "ocaml" "pkg/build.ml" "native=%{ocaml-native}%"
+                         "native-dynlink=%{ocaml-native-dynlink}%"
+]
+depends: [
+  "ocamlfind" {build}
+  "opam-lib"
+  "cmdliner"
+  "containers"
+]
+available: ocaml-version >= "4.01"
