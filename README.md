@@ -1,8 +1,8 @@
 opam-query
 ==========
 
-_opam-query_ is a tool that allows querying the `opam` files from shell scripts,
-similar to `oasis query`.
+_opam-query_ is a tool that allows querying the OPAM package description
+files from shell scripts, similar to `oasis query`.
 
 Installation
 ------------
@@ -44,6 +44,7 @@ release:
   git push origin v$(VERSION)
   opam publish prepare $(NAME_VERSION) $(ARCHIVE)
   opam publish submit $(NAME_VERSION)
+  rm -rf $(NAME_VERSION)
 
 .PHONY: release
 ```

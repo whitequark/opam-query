@@ -15,5 +15,6 @@ release:
 	git push origin v$(VERSION)
 	opam publish prepare $(NAME_VERSION) $(ARCHIVE)
 	opam publish submit $(NAME_VERSION)
+	rm -rf $(NAME_VERSION)
 
 .PHONY: release
