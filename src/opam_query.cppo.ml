@@ -4,7 +4,12 @@ let opam_name opam =
 let opam_version opam =
   opam |> OpamFile.OPAM.version |> OpamPackage.Version.to_string
 
-let guess_archive opam =
+let guess_archive tag_format opam =
+  let subst =
+    function
+    | "version" -> opam_version opam
+    | other -> failwith (Printf.sprintf "Unrecognized substitution $%s." other)
+  in
   match OpamFile.OPAM.dev_repo opam with
   | None -> failwith "No `dev-repo:' field was defined."
   | Some dev_repo ->
@@ -13,22 +18,42 @@ let guess_archive opam =
     | Some "github.com" ->
       begin match Uri.path uri |> CCString.Split.list_cpy ~by:"/" with
       | [""; username; project] ->
-        Printf.sprintf "https://github.com/%s/%s/archive/v%s.tar.gz"
-          username project (opam_version opam)
+        let buf = Buffer.create 16 in
+        Buffer.add_string buf "https://github.com/";
+        Buffer.add_string buf username;
+        Buffer.add_string buf "/";
+        Buffer.add_string buf project;
+        Buffer.add_string buf "/archive/";
+        Buffer.add_substitute buf subst tag_format;
+        Buffer.add_string buf ".tar.gz";
+        Buffer.contents buf
       | _ -> failwith "Unrecognized GitHub URL format."
       end
     | _ -> failwith "Unrecognized host specified in `dev-repo:' field."
 
-let main field_flags filename =
+let main field_flags tag_format do_archive filename =
   let opam = filename |> OpamFilename.of_string |> OpamFile.OPAM.read in
   try
     field_flags |> List.iter (fun fn ->
       fn opam |> print_endline);
+    if do_archive then
+      guess_archive tag_format opam |> print_endline;
     `Ok ()
   with Failure descr ->
     `Error (false, descr)
 
 open Cmdliner
+
+let tag_format =
+  Arg.(value & opt string "v$(version)" &
+       info ~doc:"Version tag format for --archive. $(version) is replaced by current version."
+          ["tag-format"])
+
+let archive =
+  Arg.(value & flag &
+       info ~doc:("Print the URL of a publicly downloadable source archive based on " ^
+                  "the values of the `dev-repo:' and `version:' fields.")
+          ["archive"])
 
 let field_flags =
   let field name fn = fn, Arg.info ~doc:("Print the value of the `" ^ name ^ ":' field.") [name] in
@@ -49,19 +74,14 @@ let field_flags =
     (fun opam -> opam_name opam ^ "." ^ opam_version opam),
     Arg.info ~doc:"Print the values of `name:' and `version:' fields separated by a dot."
       ["name-version"]
-  and archive =
-    guess_archive,
-    Arg.info ~doc:("Print the URL of a publicly downloadable source archive based on " ^
-                   "the values of the `dev-repo:' and `version:' fields.")
-      ["archive"]
   in
-  Arg.(value & vflag_all [] (fields @ [name_version; archive]))
+  Arg.(value & vflag_all [] (fields @ [name_version]))
 
 let filename =
   Arg.(value & pos 0 non_dir_file "opam" &
        info ~docv:"OPAM-FILE" ~doc:"Path to the opam file." [])
 
-let main_t = Term.(ret (pure main $ field_flags $ filename))
+let main_t = Term.(ret (pure main $ field_flags $ tag_format $ archive $ filename))
 
 let info =
   let doc = STRINGIFY(SYNOPSIS) in

@@ -25,6 +25,8 @@ one per line.
   * `--name-version` prints the values of `name:` and `version:`, concatenated by `.`.
   * `--archive` will attempt to determine a public download URL based on the value
     of `dev-repo:` and `version:` fields. Currently, only GitHub is supported.
+    `--tag-format` allows to customize the tag name; `$(version)` is replaced
+    by the value of the `verison:` field.
 
 Automating package releases
 ---------------------------
