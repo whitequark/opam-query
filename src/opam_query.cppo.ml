@@ -18,6 +18,13 @@ let guess_archive tag_format opam =
     | Some "github.com" ->
       begin match Uri.path uri |> CCString.Split.list_cpy ~by:"/" with
       | [""; username; project] ->
+        let project =
+          if String.length project > 4 &&
+             String.sub project (String.length project - 4) 4 = ".git" then
+            String.sub project 0 (String.length project - 4)
+          else
+            project
+        in
         let buf = Buffer.create 16 in
         Buffer.add_string buf "https://github.com/";
         Buffer.add_string buf username;
