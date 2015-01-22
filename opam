@@ -12,10 +12,11 @@ build: [
                          "native-dynlink=%{ocaml-native-dynlink}%"
 ]
 depends: [
-  "ocamlfind" {build}
+  "ocamlfind"  {build}
   "opam-lib"
   "cmdliner"
   "containers"
   "uri"
+  "ounit"      {test}
 ]
 available: [ ocaml-version >= "4.01" ]
