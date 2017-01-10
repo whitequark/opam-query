@@ -38,6 +38,32 @@ let guess_archive tag_format opam =
       end
     | _ -> failwith "Unrecognized host specified in `dev-repo:' field."
 
+(* unfortunately, string_of_constraint is local inside OpamFormula *)
+let string_of_constraint (relop, version) =
+  Printf.sprintf "%s %s" (OpamFormula.string_of_relop relop)
+                 (OpamPackage.Version.to_string version)
+
+(* unfortunately, OpamFormat.make_dep_flag is not exposed *)
+let string_of_dep_flag = function
+  | OpamTypes.Depflag_Build -> "build"
+  | OpamTypes.Depflag_Test -> "test"
+  | OpamTypes.Depflag_Doc -> "doc"
+  | OpamTypes.Depflag_Dev -> "dev"
+  | OpamTypes.Depflag_Unknown s -> s
+
+let string_of_ext_formula ext_formula =
+  ext_formula
+  |> OpamFormula.fold_left (fun acc (package, (flags, version_formula)) ->
+         let name = OpamPackage.Name.to_string package in
+         let version = OpamFormula.string_of_formula string_of_constraint
+                                                     version_formula in
+         let version' = if version = "0" then "" else version in
+         let flag = List.map string_of_dep_flag flags
+                    |> String.concat "," in
+         let full = Printf.sprintf "%s\t%s\t%s" name version' flag in
+         (full::acc)) []
+  |> String.concat "\n"
+
 let main field_flags tag_format do_archive filename =
   let opam = filename |> OpamFilename.of_string |> OpamFile.OPAM.read in
   try
@@ -67,6 +93,8 @@ let field_flags =
   let fields = [
     field "name"        opam_name;
     field "version"     opam_version;
+    field "depends"     (fun x -> x |> OpamFile.OPAM.depends |> string_of_ext_formula);
+    field "depopts"     (fun x -> x |> OpamFile.OPAM.depopts |> string_of_ext_formula);
     field "maintainer"  (fun x -> x |> OpamFile.OPAM.maintainer |> String.concat ", ");
     field "author"      (fun x -> x |> OpamFile.OPAM.author |> String.concat ", ");
     field "homepage"    (fun x -> x |> OpamFile.OPAM.homepage |> String.concat ", ");
