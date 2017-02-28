@@ -101,7 +101,7 @@ let field_flags =
     field "bug-reports" (fun x -> x |> OpamFile.OPAM.bug_reports |> String.concat ", ");
     field "dev-repo"    (fun x -> x |> OpamFile.OPAM.dev_repo |>
                           CCOpt.map OpamTypesBase.string_of_pin_option |>
-                          CCOpt.get "");
+                          CCOpt.get_or ~default:"");
     field "license"     (fun x -> x |> OpamFile.OPAM.license |> String.concat ", ");
     field "tags"        (fun x -> x |> OpamFile.OPAM.tags |> String.concat " ");
   ] in

@@ -15,7 +15,7 @@ depends: [
   "ocamlfind"  {build}
   "opam-lib"
   "cmdliner"
-  "containers"
+  "containers" {>="1.0" & <"2.0"}
   "uri"
   "ounit"      {test}
 ]
