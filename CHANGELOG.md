@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.3
+---
+
+  * No semantic changes.
+
 1.2
 ---
 
