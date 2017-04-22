@@ -12,7 +12,9 @@ build: [
                          "native-dynlink=%{ocaml-native-dynlink}%"
 ]
 depends: [
+  "ocamlbuild" {build}
   "ocamlfind"  {build}
+  "cppo"       {build}
   "opam-lib"
   "cmdliner"
   "containers" {>="1.0" & <"2.0"}
