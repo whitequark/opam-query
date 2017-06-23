@@ -4,7 +4,7 @@
 
 let builder =
   `Other ("ocamlbuild -use-ocamlfind -classic-display " ^
-          "-plugin-tags 'package(opam-lib),package(cppo_ocamlbuild)'", "_build")
+          "-plugin-tags 'package(opam-lib.format),package(cppo_ocamlbuild)'", "_build")
 
 let () =
   Pkg.describe "opam-query" ~builder [
