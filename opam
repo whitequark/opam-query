@@ -21,4 +21,4 @@ depends: [
   "uri"
   "ounit"      {test}
 ]
-available: [ ocaml-version >= "4.03" ]
+available: [ ocaml-version >= "4.01" ]
